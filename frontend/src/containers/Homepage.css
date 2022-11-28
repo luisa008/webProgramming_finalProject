@@ -1,0 +1,57 @@
+.App {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 500px;
+    margin: auto;
+}
+
+.Title {
+    grid-column: 1/4;
+    grid-row: 1/2;
+    display: flex;
+    align-items: center;
+    background-color: bisque;
+}
+
+.Slide {
+    /* border: 1px solid gray; */
+    grid-column: 1/2;
+    grid-row: 2/3;
+    display: flex;
+    background-color: #eeeeee52;
+}
+
+.Content {
+    /* border: 1px solid gray; */
+    grid-column: 2/4;
+    grid-row: 2/3;
+    display: flex;
+    align-items: center;
+}
+
+.Bottom {
+    /* border: 1px solid gray; */
+    grid-column: 1/4;
+    grid-row: 3/4;
+    background-color: #C7D8BA;
+}
+
+.mainContainer {
+    /* border: 1px solid blue; */
+    width:100%;
+    height:100vh;
+    display:grid;
+    grid-template-columns:[line1] 15% [line2] 35% [line3] 50% [line4];
+    grid-template-rows:[row1] 10% [row2] 85% [row3] 5% [row4];
+    margin: auto;
+}
+
+.Content ul li {
+    list-style: none;
+    font-size: 20px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-bottom: 10px;
+}
