@@ -1,16 +1,27 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Space } from 'antd';
 import styled from 'styled-components';
 import './Homepage.css';
 import { MeetProvider, useMeet } from './hooks/useMeet';
 import { useState, useEffect, createContext, useContext } from "react";
+import EventContent from '../components/EventContent';
 
-const ChatBoxesWrapper = styled.div`
+const SlideBoxesWrapper = styled.div`
     width: 100%;
     background: #eeeeee52;
     margin: 20px;
     padding: 20px;
     overflow: auto;
+`;
+
+const ContentBoxesWrapper = styled.div`
+    width: 100%;
+    background: #eeeeee52;
+    margin: 20px;
+    padding: 20px;
+    overflow: auto;
+    border: 1px solid gray;
+    border-radius: 10px;
 `;
 
 const TitleWrapper = styled.div`
@@ -37,14 +48,25 @@ const Homepage = () => {
                 <TitleWrapper><h1>Let's Meeting</h1></TitleWrapper>
             </header>
             <div className="Slide">
-                <ChatBoxesWrapper>
+                <SlideBoxesWrapper>
                     <p>User: {user}</p>
-                    <Button type="primary">
-                        Create Event
-                    </Button>
-                </ChatBoxesWrapper>
+                    <Space direction="vertical">
+                        <Button type="primary">
+                            Create Event
+                        </Button>
+                        <Button type="primary">
+                            Create Routine Schedule
+                        </Button>
+                        <Button type="primary">
+                            Join Event
+                        </Button>
+                    </Space>
+                </SlideBoxesWrapper>
             </div>
             <div className="Content">
+                <ContentBoxesWrapper>
+                    <EventContent></EventContent>
+                </ContentBoxesWrapper>
             </div>
             <div className="Bottom"></div>
         </div>
