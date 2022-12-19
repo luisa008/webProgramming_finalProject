@@ -1,6 +1,7 @@
 import LogIn from "../components/LogIn";
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom";
+import { MeetProvider, useMeet } from './hooks/useMeet';
 import "./SignIn.css";
 
 const Wrapper = styled.div`
@@ -13,6 +14,7 @@ const Wrapper = styled.div`
 }`;
 
 const SignIn = () => {
+    const {user, setUser} = useMeet();
     const navigate = useNavigate();
     const handleClick = () => {
         navigate('/Homepage')
@@ -20,7 +22,7 @@ const SignIn = () => {
     return (
         <div className='Container'>
             <div className="Title"><Wrapper><h1>Let's Meet!</h1></Wrapper></div>
-            <div className="SignContent"><LogIn me={"lisa"} handleClick={handleClick} /></div>
+            <div className="SignContent"><LogIn user={user} setUser={setUser} handleClick={handleClick} /></div>
             <div className="Bottom"></div>
             {/* <Wrapper><h1>Chat Room</h1></Wrapper>
             <LogIn me={"lisa"} handleClick={handleClick} /> */}

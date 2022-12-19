@@ -5,6 +5,8 @@ import './Homepage.css';
 import { MeetProvider, useMeet } from './hooks/useMeet';
 import { useState, useEffect, createContext, useContext } from "react";
 import EventContent from '../components/EventContent';
+import EventModal from '../components/EventModal';
+import JoinModal from '../components/JoinModal';
 
 const SlideBoxesWrapper = styled.div`
     width: 100%;
@@ -34,13 +36,22 @@ const TitleWrapper = styled.div`
     font-size: 3em;
 `;
 
-const Homepage = () => {
-    const {user, setUser} = MeetProvider().props.value;
-    console.log(user)
+const getDaysArray = function(start, end) {
+    for(var arr=[],dt=new Date(start); dt<=new Date(end); dt.setDate(dt.getDate()+1)){
+        arr.push(new Date(dt));
+    }
+    return arr;
+};
 
-    useEffect(() => {
-        setUser("lisa");
-    }, []);
+const Homepage = () => {
+    const {user, eventRange, setEventRange} = useMeet();
+    const [eventModalOpen, setEventModalOpen] = useState(false);
+    const [joinModalOpen, setJoinModalOpen] = useState(false);
+    // console.log(user)
+
+    // useEffect(() => {
+    //     setUser("lisa");
+    // }, []);
 
     return (
         <div className="mainContainer">
@@ -50,16 +61,34 @@ const Homepage = () => {
             <div className="Slide">
                 <SlideBoxesWrapper>
                     <p>User: {user}</p>
+                    <p>Total events: 4</p>
                     <Space direction="vertical">
-                        <Button type="primary">
+                        <Button type="primary" onClick={()=>{setEventModalOpen(true)}}>
                             Create Event
                         </Button>
                         <Button type="primary">
                             Create Routine Schedule
                         </Button>
-                        <Button type="primary">
+                        <Button type="primary" onClick={()=>{setJoinModalOpen(true)}}>
                             Join Event
                         </Button>
+                        <EventModal
+                            open={eventModalOpen}
+                            onCreate={(values) => {
+                                const dateList = getDaysArray(values.Dates[0].$d,values.Dates[1].$d);
+                                // dateList.map((v)=>v.toISOString().slice(0,10)).join("")
+                                console.log(dateList)
+                                setEventModalOpen(false);
+                            }}
+                            onCancel={() => { setEventModalOpen(false);}}
+                        />
+                        <JoinModal
+                            open={joinModalOpen}
+                            onCreate={(eventId) => {
+                                setJoinModalOpen(false);
+                            }}
+                            onCancel={() => { setJoinModalOpen(false);}}
+                        />
                     </Space>
                 </SlideBoxesWrapper>
             </div>

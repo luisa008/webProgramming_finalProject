@@ -4,16 +4,20 @@ import styled from 'styled-components';
 
 const data = [
     {
-      title: 'Ant Design Title 1',
+      title: 'Event one',
+      description: "creator: Luisa | participants: 4"
     },
     {
-      title: 'Ant Design Title 2',
+      title: 'Event one',
+      description: "creator: Luisa | participants: 4"
     },
     {
-      title: 'Ant Design Title 3',
+      title: 'Event one',
+      description: "creator: Luisa | participants: 4"
     },
     {
-      title: 'Ant Design Title 4',
+      title: 'Event one',
+      description: "creator: Luisa | participants: 4"
     },
   ];
 
@@ -26,7 +30,7 @@ const EventContent = () => {
             <List.Item>
                 <List.Item.Meta
                 title={<a href="https://ant.design">{item.title}</a>}
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                description={item.description}
                 />
             </List.Item>
             )}
