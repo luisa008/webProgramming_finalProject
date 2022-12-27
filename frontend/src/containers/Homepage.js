@@ -44,7 +44,7 @@ const getDaysArray = function(start, end) {
 };
 
 const Homepage = () => {
-    const {user, eventRange, setEventRange} = useMeet();
+    const {user, eventRange, setEventRange, eventList, setEventList} = useMeet();
     const [eventModalOpen, setEventModalOpen] = useState(false);
     const [joinModalOpen, setJoinModalOpen] = useState(false);
     // console.log(user)
@@ -78,6 +78,10 @@ const Homepage = () => {
                                 const dateList = getDaysArray(values.Dates[0].$d,values.Dates[1].$d);
                                 // dateList.map((v)=>v.toISOString().slice(0,10)).join("")
                                 console.log(dateList)
+                                setEventList([...eventList, {
+                                    title: values.EventName,
+                                    description: `creator: ${user} | participants: 0`
+                                  }])
                                 setEventModalOpen(false);
                             }}
                             onCancel={() => { setEventModalOpen(false);}}

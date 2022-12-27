@@ -43,7 +43,7 @@ const EventModal = ({ open, onCreate, onCancel }) => {
             <Form form={form} layout="vertical"
                 name="form_in_modal">
                 <Form.Item
-                    name="Event name"
+                    name="EventName"
                     label="Event name"
                     rules={[
                         {

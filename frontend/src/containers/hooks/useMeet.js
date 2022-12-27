@@ -7,6 +7,7 @@ const MeetContext = createContext({
     eventRange: [],
     eventName: [],
     eventBar: [],
+    eventList: [],
 });
 
 const MeetProvider = (props) => {
@@ -14,11 +15,12 @@ const MeetProvider = (props) => {
     const [eventRange, setEventRange] = useState([]);
     const [eventName, setEventName] = useState("");
     const [eventBar, setEventBar] = useState([]);
+    const [eventList, setEventList] = useState([]);
 
     return (
         <MeetContext.Provider
             value={{
-                user, setUser, eventRange, setEventRange, eventName, setEventName, eventBar, setEventBar
+                user, setUser, eventRange, setEventRange, eventName, setEventName, eventBar, setEventBar, eventList, setEventList,
             }}
             {...props}
         />
