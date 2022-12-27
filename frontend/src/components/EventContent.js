@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar, List, Button } from 'antd';
 import styled from 'styled-components';
+import { useMeet } from '../containers/hooks/useMeet';
 
 const data = [
     {
@@ -22,10 +23,13 @@ const data = [
   ];
 
 const EventContent = () => {
+  const {eventList, setEventList} = useMeet();
+  setEventList(data);
+
     return(
         <List
             itemLayout="horizontal"
-            dataSource={data}
+            dataSource={eventList}
             renderItem={(item) => (
             <List.Item>
                 <List.Item.Meta

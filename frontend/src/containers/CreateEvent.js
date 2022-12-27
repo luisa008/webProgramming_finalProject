@@ -90,7 +90,7 @@ const CreateEvent = () => {
                             <div key={"row"+i} id={"row"+i} style={{display:'flex'}}>
                                 {items.map((item, j) => (
                                     <div className='cell' key={j} id={j} date={item.date} time={item.time}
-                                     available={item.available} onClick={() => handleCell(i, j)}
+                                     available={item.available} onClick={() => handleCell(i, j)} onMouseMove={() => handleCell(i, j)}
                                      style={{ backgroundColor: item.available ? "green" : "white" }}></div>
                                 ))}
                             </div>

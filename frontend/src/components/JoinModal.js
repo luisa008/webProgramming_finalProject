@@ -26,7 +26,7 @@ const JoinModal = ({ open, onCreate, onCancel }) => {
             <Form form={form} layout="vertical"
                 name="form_in_modal">
                 <Form.Item
-                    name="Event ID"
+                    name="EventID"
                     label="Event ID"
                     rules={[
                         {
