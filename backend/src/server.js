@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import WebSocket from 'ws';
 import mongo from './mongo';
 import wsConnect from './wsConnect';
+import dataInit from './initdb';
 
 mongo.connect();
 
@@ -14,10 +15,10 @@ const db = mongoose.connection;
 
 db.once('open', () => {
     console.log("MongoDB connected!");
+    dataInit();
     wss.on('connection', (ws) => {
-        // // wsConnect.initData(ws);
-        // ws.box = '';
-        // ws.onmessage = wsConnect.onMessage(ws, wss); 
+        ws.user = {};
+        ws.onmessage = wsConnect.onMessage(ws, wss); 
     });
 });
 const PORT = process.env.PORT || 4000;
