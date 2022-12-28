@@ -23,24 +23,20 @@ const MeetProvider = (props) => {
         sendData(["homepage", username]);
     }
     // send data of created schedule
-    const createEvent = (dateList) => {
-        sendData(["createEvent", dateList]);
+    const createEvent = (event) => {
+        sendData(["createEvent", event]);
     }
-    // join an event using event id
+    // join an event using event id(need to add user to this event and update the user's eventlist)
     const joinEvent = (eventId) => {
         sendData(["joinEvent", eventId]);
     }
-    // request event data for editing
-    const editSchedule = (eventId) => {
-        sendData(["editSchedule", eventId]);
+    // edit event
+    const editEvent = (eventId) => {
+        sendData(["editEvent", eventId]);
     }
-    // submit schedule after editing
-    const submitSchedule = (timeSlots) => {
-        sendData(["submitSchedule", timeSlots])
-    }
-    // request event data for showing
-    const showEvent = (eventId) => {
-        sendData(["showEvent", eventId]);
+    // submit event
+    const submitEvent = (event) => {
+        sendData(["submitEvent", event]);
     }
 
     const sendData = async (data) => {
@@ -54,14 +50,14 @@ const MeetProvider = (props) => {
         console.log(`payload: ${payload}`);
         switch(task) {
 
-            // receive user data to switch to homepage
+            // receive user data to switch to homepage(return user's whole events)
             case "homepage": {
                 // payload: user schema
                 break;
             }
 
             // receive event data to switch to editing
-            case "editSchedule": {
+            case "editEvent": {
                 // payload: event schema
                 break;
             }
@@ -86,6 +82,7 @@ const MeetProvider = (props) => {
         <MeetContext.Provider
             value={{
                 user, setUser, eventRange, setEventRange, eventName, setEventName, eventBar, setEventBar, eventList, setEventList,
+                homepage, createEvent, joinEvent, editSchedule, submitSchedule, showEvent, editEvent, submitEvent
             }}
             {...props}
         />
