@@ -9,19 +9,9 @@ const EventSchema = new Schema({
     pplNum: {type:  Number, required: [true, 'participantNum field is required']},
     pplNames: [{type: String}],
     pplSubmitted: {type: Map, of: String},
-    timeSlots: [[{type: mongoose.Types.ObjectId, ref: 'TimeSlot'}]],
+    timeSlots: {},
 });
 const EventModel = mongoose.model('Event', EventSchema);
-
-/******* TimeSlot Schema *******/
-const TimeSlotSchema = new Schema({
-    date: {type: String, required: [true, 'date field is required.']},
-    time: {type: String, required: [true, 'time field is required.']},
-    availableNum: {type: String, required: [true, 'availableNum field is required.']},
-    availablePpl: [{type: String}], 
-    notAvailablePpl: [{type: String}],
-});
-const TimeSlotModel = mongoose.model('TimeSlot', TimeSlotSchema);
 
 /******* User Schema *******/
 const UserSchema = new Schema({
@@ -31,4 +21,4 @@ const UserSchema = new Schema({
 });
 const UserModel = mongoose.model('User', UserSchema);
 
-export {EventModel, TimeSlotModel, UserModel};
+export {EventModel, UserModel};

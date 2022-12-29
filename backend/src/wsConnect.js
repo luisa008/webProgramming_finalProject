@@ -1,5 +1,4 @@
-import { EventModel, TimeSlotModel, UserModel } from "./models/meet";
-import crypto from 'crypto';
+import { EventModel, UserModel } from "./models/meet";
 
 const sendData = (data, ws) => {
     ws.send(JSON.stringify(data)); 
@@ -77,6 +76,8 @@ export default {
                         "pplNum",
                     ]});
                     sendData(["homepage", user], ws);
+                    console.log(event);
+                    console.log(user);
                     break;
                 }
 

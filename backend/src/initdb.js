@@ -1,9 +1,8 @@
-import { EventModel, TimeSlotModel, UserModel } from "./models/meet";
+import { EventModel, UserModel } from "./models/meet";
 
 const dataInit = async () => {
 
     await EventModel.deleteMany({});
-    await TimeSlotModel.deleteMany({});
     await UserModel.deleteMany({});
 
     const giftExchange = new EventModel({
