@@ -14,10 +14,11 @@ const Wrapper = styled.div`
 }`;
 
 const SignIn = () => {
-    const {user, setUser} = useMeet();
+    const {user, setUser, homepage} = useMeet();
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/Homepage')
+        navigate('/Homepage');
+        homepage(user);
     }
     return (
         <div className='Container'>

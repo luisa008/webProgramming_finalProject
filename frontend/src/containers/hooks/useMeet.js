@@ -53,6 +53,16 @@ const MeetProvider = (props) => {
             // receive user data to switch to homepage(return user's whole events)
             case "homepage": {
                 // payload: user schema
+                const temp = [];
+                for(var event of payload.events){
+                    console.log(event)
+                    temp.push({
+                        title: event.name,
+                        description: `creator: ${event.creator} | participants: ${event.pplNum}`,
+                        id: event.id
+                    })
+                }
+                setEventList([...temp]);
                 break;
             }
 
@@ -82,7 +92,7 @@ const MeetProvider = (props) => {
         <MeetContext.Provider
             value={{
                 user, setUser, eventRange, setEventRange, eventName, setEventName, eventBar, setEventBar, eventList, setEventList,
-                homepage, createEvent, joinEvent, editSchedule, submitSchedule, showEvent, editEvent, submitEvent
+                homepage, createEvent, joinEvent, editEvent, submitEvent
             }}
             {...props}
         />

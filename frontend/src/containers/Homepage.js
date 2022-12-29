@@ -36,6 +36,10 @@ const TitleWrapper = styled.div`
     font-size: 3em;
 `;
 
+const dateTime = ["9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+                    "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
+                    "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30"]
+
 const getDaysArray = function(start, end) {
     for(var arr=[],dt=new Date(start); dt<=new Date(end); dt.setDate(dt.getDate()+1)){
         arr.push(new Date(dt));
@@ -44,7 +48,7 @@ const getDaysArray = function(start, end) {
 };
 
 const Homepage = () => {
-    const {user, eventRange, setEventRange, eventList, setEventList} = useMeet();
+    const {user, eventList, setEventList, joinEvent, createEvent} = useMeet();
     const [eventModalOpen, setEventModalOpen] = useState(false);
     const [joinModalOpen, setJoinModalOpen] = useState(false);
     // console.log(user)
@@ -61,7 +65,7 @@ const Homepage = () => {
             <div className="Slide">
                 <SlideBoxesWrapper>
                     <p>User: {user}</p>
-                    <p>Total events: 4</p>
+                    <p>Total events: {eventList.length}</p>
                     <Space direction="vertical">
                         <Button type="primary" onClick={()=>{setEventModalOpen(true)}}>
                             Create Event
@@ -76,19 +80,38 @@ const Homepage = () => {
                             open={eventModalOpen}
                             onCreate={(values) => {
                                 const dateList = getDaysArray(values.Dates[0].$d,values.Dates[1].$d);
-                                // dateList.map((v)=>v.toISOString().slice(0,10)).join("")
-                                console.log(dateList)
+                                const date = dateList.map((v)=>v.toISOString().slice(0,10));
+                                console.log(date)
+                                const id = Math.random().toString(36);
                                 setEventList([...eventList, {
                                     title: values.EventName,
-                                    description: `creator: ${user} | participants: 0`
-                                  }])
+                                    description: `creator: ${user} | participants: 0`,
+                                    id: id
+                                  }]);
+                                var form = [];
+                                for(var i = 0; i < 16; i++){
+                                    form.push([]);
+                                    for(var j = 0; j < date.length; j++){
+                                        form[i].push({date: date[j],
+                                             time: dateTime[i], availableNum: 0, availablePpl: [], notAvailablePpl: []});
+                                    }
+                                }
+                                createEvent({
+                                    name: values.EventName,
+                                    // description: `creator: ${user} | participants: 1`,
+                                    // id: id,
+                                    form: form,
+                                    // participants: 1
+                                })
                                 setEventModalOpen(false);
                             }}
                             onCancel={() => { setEventModalOpen(false);}}
                         />
                         <JoinModal
                             open={joinModalOpen}
-                            onCreate={(eventId) => {
+                            onCreate={(values) => {
+                                console.log(values.EventID);
+                                joinEvent(values.EventID);
                                 setJoinModalOpen(false);
                             }}
                             onCancel={() => { setJoinModalOpen(false);}}

@@ -18,7 +18,7 @@ const EventModal = ({ open, onCreate, onCancel }) => {
         console.log('Selected Time: ', value);
         console.log('Formatted Selected Time: ', dateString);
         const dateList = getDaysArray(new Date(dateString[0]),new Date(dateString[1]));
-        console.log(dateList);
+        // console.log(dateList);
     }
 
     return (

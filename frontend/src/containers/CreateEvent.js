@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Space } from 'antd';
 import styled from 'styled-components';
 import './CreateEvent.css';
+import { useNavigate } from "react-router-dom";
 import { MeetProvider, useMeet } from './hooks/useMeet';
 import { useState, useEffect, createContext, useContext } from "react";
 
@@ -65,13 +66,20 @@ const FormWrapper = styled.div`
 `;
 
 const CreateEvent = () => {
+    const {submitEvent} = useMeet();
     const [block, setBlock] = useState(tempArray);
+    const navigate = useNavigate();
 
     const handleCell = (i, j) => {
         let temp = [...block];
         temp[i][j].available = !temp[i][j].available;
         setBlock(temp);
         console.log(block[i][j].available)
+    }
+
+    const handleSubmit = () => {
+        navigate('/ShowEvent');
+        submitEvent();
     }
 
     return (
@@ -82,15 +90,15 @@ const CreateEvent = () => {
             <div className="FormContent">
                 <ContentBoxesWrapper>
                     <TitleWrapper><h1 style={{marginRight: '20px'}}>Event Name</h1>
-                    <Button type="primary">
-                        Create Event
+                    <Button type="primary" onclick={handleSubmit}>
+                        Submit Event
                     </Button></TitleWrapper>
                     <FormWrapper>
                         {block.map((items, i) => (
                             <div key={"row"+i} id={"row"+i} style={{display:'flex'}}>
                                 {items.map((item, j) => (
                                     <div className='cell' key={j} id={j} date={item.date} time={item.time}
-                                     available={item.available} onClick={() => handleCell(i, j)} onMouseMove={() => handleCell(i, j)}
+                                     available={item.available} onClick={() => handleCell(i, j)}
                                      style={{ backgroundColor: item.available ? "green" : "white" }}></div>
                                 ))}
                             </div>
@@ -102,5 +110,7 @@ const CreateEvent = () => {
         </div>
       );
 }
+
+// onMouseMove={() => handleCell(i, j)}
 
 export default CreateEvent;

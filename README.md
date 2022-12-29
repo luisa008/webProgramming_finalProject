@@ -7,3 +7,6 @@
     - 有write: go to show event
     - not: go to write/create event
 - User schema: name, 目前有的(create/join的)events
+
+## 備註
+- 不能直接進到homepage之類的頁面，一定要先登入

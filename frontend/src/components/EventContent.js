@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar, List, Button } from 'antd';
 import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
 import { useMeet } from '../containers/hooks/useMeet';
 
 const data = [
@@ -23,8 +24,14 @@ const data = [
   ];
 
 const EventContent = () => {
-  const {eventList, setEventList} = useMeet();
-  setEventList(data);
+  const {eventList, editEvent} = useMeet();
+  // setEventList(data);
+  const navigate = useNavigate();
+
+  const handleClick = (id) => {
+    navigate('/CreateEvent');
+    editEvent(id);
+  }
 
     return(
         <List
@@ -33,9 +40,10 @@ const EventContent = () => {
             renderItem={(item) => (
             <List.Item>
                 <List.Item.Meta
-                title={<a href="https://ant.design">{item.title}</a>}
+                title={item.title}
                 description={item.description}
                 />
+                <Button onClick={() => handleClick(item.id)}>Go Event</Button>
             </List.Item>
             )}
         />
