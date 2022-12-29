@@ -28,9 +28,16 @@ const EventContent = () => {
   // setEventList(data);
   const navigate = useNavigate();
 
-  const handleClick = (id) => {
-    navigate('/CreateEvent');
-    editEvent(id);
+  const handleClick = (id, submitted) => {
+    console.log(id)
+    if(submitted){
+      navigate('ShowEvent');
+      editEvent(id);
+    }
+    else{
+      navigate('/CreateEvent');
+      editEvent(id);
+    }
   }
 
     return(
@@ -43,7 +50,7 @@ const EventContent = () => {
                 title={item.title}
                 description={item.description}
                 />
-                <Button onClick={() => handleClick(item.id)}>Go Event</Button>
+                <Button nClick={() => {handleClick(item.id, item.submitted)}}>Go Event</Button>
             </List.Item>
             )}
         />

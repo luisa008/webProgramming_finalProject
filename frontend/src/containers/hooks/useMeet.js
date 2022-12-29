@@ -59,7 +59,8 @@ const MeetProvider = (props) => {
                     temp.push({
                         title: event.name,
                         description: `creator: ${event.creator} | participants: ${event.pplNum}`,
-                        id: event.id
+                        id: event.id,
+                        submitted: payload.eventSubmitted[event.id]
                     })
                 }
                 setEventList([...temp]);
