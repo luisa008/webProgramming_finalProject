@@ -1,5 +1,7 @@
 import { EventModel, UserModel } from "./models/meet";
 
+const showingEvents = {}
+
 const sendData = (data, ws) => {
     ws.send(JSON.stringify(data)); 
 };
@@ -37,6 +39,10 @@ export default {
                     }
 
                     ws.user = user;
+                    if (showingEvents[ws.state] && showingEvents[ws.state].has(ws)) {
+                        showingEvents[ws.state].delete(ws);
+                    }
+                    ws.state = "homepage";
                     
                     await user.populate({ path: "events", select: [
                         "id",
@@ -76,8 +82,6 @@ export default {
                         "pplNum",
                     ]});
                     sendData(["homepage", user], ws);
-                    console.log(event);
-                    console.log(user);
                     break;
                 }
 
@@ -88,12 +92,13 @@ export default {
 
                     const event = await EventModel.findOne({id});
                     if (!event) {
-                        // send error message?
                         console.log("not found");
+                        sendData(["error", "Event not found!"], ws);
                         break;
                     }
                     if (event.pplNames.includes(user.username)) {
                         console.log("already joined!");
+                        sendData(["error", "Alreadly joined this event!"], ws);
                         break;
                     }
                     event.pplNum += 1;
@@ -117,11 +122,61 @@ export default {
 
                 // receive eventId & return event data for editing
                 case "editEvent": {
+                    const id = payload;
+                    const user = ws.user;
+
+                    const event = await EventModel.findOne({id});
+                    if (!event) {
+                        console.log("not found!");
+                        sendData(["error", "Event not found!"], ws);
+                        break;
+                    }
+
+                    if (user.eventSubmitted.get(id)) {
+                        sendData(["showEvent", event], ws);
+                        if (!showingEvents[id]) showingEvents[id] = new Set();
+                        showingEvents[id].add(ws);
+
+                        ws.state = id;
+                    }
+                    else {
+                        sendData(["editEvent", event], ws);
+                        ws.state = "edit";
+                    }
                     break;
                 }
 
-                // receive eventId & return event data for showing
-                case "showEvent": {
+                // receive event form data & return event data for showEvent
+                case "submitEvent": {
+                    const { id, form } = payload;
+                    const user = ws.user;
+
+                    const event = await EventModel.findOne({id});
+                    if (!event) {
+                        console.log("not found!")
+                        sendData(["error", "Event not found!"], ws);
+                    }
+                    event.pplSubmitted.set(user.username, true);
+                    event.timeSlots = form;
+                    event.markModified("timeSlots");
+                    await event.save();
+
+                    user.eventSubmitted.set(id, true);
+                    await user.save();
+
+                    if (!showingEvents[id]) showingEvents[id] = new Set();
+                    showingEvents[id].add(ws);
+                    
+                    ws.state = id;
+                    
+                    sendData(["showEvent", event], ws);
+                    if (showingEvents[id]) {
+                        showingEvents[id].forEach(client => {
+                            if (client !== ws) {
+                                sendData(["updateEvent", event], client);
+                            }
+                        });
+                    }
                     break;
                 }
 

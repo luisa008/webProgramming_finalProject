@@ -12,7 +12,7 @@ const dataInit = async () => {
         pplNum: 2,
         pplNames: ["luisa", "angela"],
         pplSubmitted: {
-            luisa: true,
+            luisa: false,
             angela: false,
         },
         timeSlots: [],
