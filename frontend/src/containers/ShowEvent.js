@@ -156,7 +156,10 @@ const ShowEvent = () => {
                     </ScheduleWrapper>
                     <PeopleWrapper>
                         <SubTitleWrapper><h1>Available people</h1></SubTitleWrapper>
-                        <h2>Available</h2>
+                        <div className='available'>
+                            <h2>Available</h2>
+                            <h2>Unavailabe</h2>
+                        </div>
                     </PeopleWrapper>
                     <ResultWrapper>
                         <SubTitleWrapper><h1>Best Time</h1></SubTitleWrapper>

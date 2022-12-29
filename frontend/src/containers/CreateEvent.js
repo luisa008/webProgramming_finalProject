@@ -66,20 +66,20 @@ const FormWrapper = styled.div`
 `;
 
 const CreateEvent = () => {
-    const {submitEvent} = useMeet();
-    const [block, setBlock] = useState(tempArray);
+    const {submitEvent, eventRange, setEventRange} = useMeet();
+    // const [block, setBlock] = useState(tempArray);
     const navigate = useNavigate();
 
     const handleCell = (i, j) => {
-        let temp = [...block];
+        let temp = [...eventRange];
         temp[i][j].available = !temp[i][j].available;
-        setBlock(temp);
-        console.log(block[i][j].available)
+        setEventRange(temp);
+        console.log(eventRange[i][j].available)
     }
 
     const handleSubmit = () => {
         navigate('/ShowEvent');
-        submitEvent();
+        submitEvent(eventRange);
     }
 
     return (
@@ -90,11 +90,11 @@ const CreateEvent = () => {
             <div className="FormContent">
                 <ContentBoxesWrapper>
                     <TitleWrapper><h1 style={{marginRight: '20px'}}>Event Name</h1>
-                    <Button type="primary" onclick={handleSubmit}>
+                    <Button type="primary" onClick={handleSubmit}>
                         Submit Event
                     </Button></TitleWrapper>
                     <FormWrapper>
-                        {block.map((items, i) => (
+                        {eventRange.map((items, i) => (
                             <div key={"row"+i} id={"row"+i} style={{display:'flex'}}>
                                 {items.map((item, j) => (
                                     <div className='cell' key={j} id={j} date={item.date} time={item.time}

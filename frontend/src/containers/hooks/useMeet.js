@@ -55,10 +55,9 @@ const MeetProvider = (props) => {
                 // payload: user schema
                 const temp = [];
                 for(var event of payload.events){
-                    console.log(event)
                     temp.push({
                         title: event.name,
-                        description: `creator: ${event.creator} | participants: ${event.pplNum}`,
+                        description: `Creator: ${event.creator} | Participants: ${event.pplNum}`,
                         id: event.id,
                         submitted: payload.eventSubmitted[event.id]
                     })
@@ -70,6 +69,10 @@ const MeetProvider = (props) => {
             // receive event data to switch to editing
             case "editEvent": {
                 // payload: event schema
+                console.log(payload)
+                const { timeSlots } = payload;
+                console.log(timeSlots)
+                setEventRange(timeSlots);
                 break;
             }
 

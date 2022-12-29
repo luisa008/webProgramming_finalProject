@@ -63,3 +63,9 @@
 .cell:active {
     background-color: blue;
 }
+
+.available {
+    display: flex;
+    margin: 10px;
+    border: 1px solid gray;
+}

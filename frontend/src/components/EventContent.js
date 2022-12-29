@@ -30,8 +30,8 @@ const EventContent = () => {
 
   const handleClick = (id, submitted) => {
     console.log(id)
-    if(submitted){
-      navigate('ShowEvent');
+    if(submitted === "true"){
+      navigate('/ShowEvent');
       editEvent(id);
     }
     else{
@@ -50,7 +50,7 @@ const EventContent = () => {
                 title={item.title}
                 description={item.description}
                 />
-                <Button nClick={() => {handleClick(item.id, item.submitted)}}>Go Event</Button>
+                <Button onClick={() => {handleClick(item.id, item.submitted)}}>Go Event</Button>
             </List.Item>
             )}
         />
