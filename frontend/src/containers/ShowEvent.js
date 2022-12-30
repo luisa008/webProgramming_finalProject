@@ -112,25 +112,26 @@ const addHexColor = (c1, c2) => {
 }
 
 const ShowEvent = () => {
-    const [block, setBlock] = useState(tempArray);
-
-    const handleCell = (i, j) => {
-        let temp = [...block];
-        temp[i][j].available = !temp[i][j].available;
-        setBlock(temp);
-        console.log(block[i][j].available)
-    }
+    const {showList, setShowList} = useMeet();
+    const [avaList, setAvaList] = useState([]);
+    const [notAvaList, setNotAvaList] = useState([]);
 
     const chooseColor = (num) => {
         var max = 0;
-        for(var i = 0; i < block.length; i++){
-            for(var j = 0; j < block[i].length; j++){
-                if(block[i][j].available > max) max = block[i][j].available;
+        for(var i = 0; i < showList.length; i++){
+            for(var j = 0; j < showList[i].length; j++){
+                if(showList[i][j].available > max) max = showList[i][j].available;
             }
         }
         // console.log(max);
         // console.log(addHexColor("008000", (num*4096).toString(16)));
         return addHexColor("ffffff", (num*8192).toString(16));
+    }
+
+    const handleShow = (i, j) => {
+        // console.log(showList[i][j].availablePpl);
+        setAvaList(showList[i][j].availablePpl);
+        setNotAvaList(showList[i][j].notAvailablePpl);
     }
 
     return (
@@ -141,14 +142,17 @@ const ShowEvent = () => {
             <div className="FormContent">
                 <ContentBoxesWrapper>
                     <ScheduleWrapper>
-                        <SubTitleWrapper><h1>Event Name</h1></SubTitleWrapper>
+                        <SubTitleWrapper>
+                            <h1 style={{marginRight: '20px'}}>Event Name</h1>
+                            <Button type='primary'>Update Event</Button>
+                        </SubTitleWrapper>
                         <FormWrapper>
-                            {block.map((items, i) => (
+                            {showList.map((items, i) => (
                                 <div key={"row"+i} id={"row"+i} style={{display:'flex'}}>
                                     {items.map((item, j) => (
                                         <div className='cell' key={j} id={j} date={item.date} time={item.time}
-                                        available={item.available}
-                                        style={{ backgroundColor: "#"+chooseColor(item.available) }}></div>
+                                        available={item.availableNum} onMouseOver={() => handleShow(i, j)}
+                                        style={{ backgroundColor: "#"+chooseColor(item.availableNum) }}></div>
                                     ))}
                                 </div>
                             ))}
@@ -157,8 +161,22 @@ const ShowEvent = () => {
                     <PeopleWrapper>
                         <SubTitleWrapper><h1>Available people</h1></SubTitleWrapper>
                         <div className='available'>
-                            <h2>Available</h2>
-                            <h2>Unavailabe</h2>
+                            <div>
+                                <h2>Available</h2>
+                                <ul>
+                                    {avaList.map((item, i) => (
+                                        <li key={i}>{item}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div>
+                                <h2>Unavailable</h2>
+                                <ul>
+                                    {notAvaList.map((item, i) => (
+                                        <li key={i}>{item}</li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                     </PeopleWrapper>
                     <ResultWrapper>

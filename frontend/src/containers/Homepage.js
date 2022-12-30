@@ -80,16 +80,10 @@ const Homepage = () => {
                             open={eventModalOpen}
                             onCreate={(values) => {
                                 const dateList = getDaysArray(values.Dates[0].$d,values.Dates[1].$d);
-                                const date = dateList.map((v)=>v.toISOString().slice(0,10));
+                                const date = dateList.map((v)=>v.toISOString().slice(0,10)+v.toString().slice(0,3));
                                 console.log(date)
-                                const id = Math.random().toString(36);
-                                setEventList([...eventList, {
-                                    title: values.EventName,
-                                    description: `creator: ${user} | participants: 0`,
-                                    id: id
-                                  }]);
                                 var form = [];
-                                for(var i = 0; i < 16; i++){
+                                for(var i = 0; i < 28; i++){
                                     form.push([]);
                                     for(var j = 0; j < date.length; j++){
                                         form[i].push({date: date[j],

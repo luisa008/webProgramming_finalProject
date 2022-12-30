@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Modal, Input, Form, DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import moment from 'moment';
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY/MM/DD';
 
@@ -11,15 +12,20 @@ const getDaysArray = function(start, end) {
     return arr;
 };
 
+// Disable the date before today
+const isabledDate = (current) => {
+    return current && current < moment().subtract(1, 'days').endOf('day');
+};
+
 const EventModal = ({ open, onCreate, onCancel }) => {
     const [form] = Form.useForm();
 
-    const onChange = (value, dateString) => {
-        console.log('Selected Time: ', value);
-        console.log('Formatted Selected Time: ', dateString);
-        const dateList = getDaysArray(new Date(dateString[0]),new Date(dateString[1]));
-        // console.log(dateList);
-    }
+    // const onChange = (value, dateString) => {
+    //     console.log('Selected Time: ', value);
+    //     console.log('Formatted Selected Time: ', dateString);
+    //     const dateList = getDaysArray(new Date(dateString[0]),new Date(dateString[1]));
+    //     // console.log(dateList);
+    // }
 
     return (
         <Modal
@@ -67,7 +73,8 @@ const EventModal = ({ open, onCreate, onCancel }) => {
                     <RangePicker
                         // defaultValue={[dayjs('2022/12/01', dateFormat), dayjs('2022/12/10', dateFormat)]}
                         format={dateFormat}
-                        onChange={onChange}
+                        disabledDate={isabledDate}
+                        // onChange={onChange}
                     />
                 </Form.Item>
             </Form>

@@ -30,7 +30,7 @@ const EventContent = () => {
 
   const handleClick = (id, submitted) => {
     console.log(id)
-    if(submitted === "true"){
+    if(submitted){
       navigate('/ShowEvent');
       editEvent(id);
     }

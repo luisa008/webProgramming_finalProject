@@ -8,6 +8,7 @@ const MeetContext = createContext({
     eventName: [],
     eventBar: [],
     eventList: [],
+    showList: [],
 });
 
 const MeetProvider = (props) => {
@@ -16,6 +17,7 @@ const MeetProvider = (props) => {
     const [eventName, setEventName] = useState("");
     const [eventBar, setEventBar] = useState([]);
     const [eventList, setEventList] = useState([]);
+    const [showList, setShowList] = useState([]);
 
     /* Call the methods below to notify server */
     // request user data for homepage
@@ -69,7 +71,6 @@ const MeetProvider = (props) => {
             // receive event data to switch to editing
             case "editEvent": {
                 // payload: event schema
-                console.log(payload)
                 const { timeSlots } = payload;
                 console.log(timeSlots)
                 setEventRange(timeSlots);
@@ -79,6 +80,8 @@ const MeetProvider = (props) => {
             // receive event data to switch to showing
             case "showEvent": {
                 // payload: event schema
+                console.log(payload);
+                setShowList(payload.timeSlots);
                 break;
             }
 
@@ -96,7 +99,7 @@ const MeetProvider = (props) => {
         <MeetContext.Provider
             value={{
                 user, setUser, eventRange, setEventRange, eventName, setEventName, eventBar, setEventBar, eventList, setEventList,
-                homepage, createEvent, joinEvent, editEvent, submitEvent
+                homepage, createEvent, joinEvent, editEvent, submitEvent, showList, setShowList
             }}
             {...props}
         />

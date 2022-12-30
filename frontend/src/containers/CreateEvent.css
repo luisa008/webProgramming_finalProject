@@ -67,5 +67,10 @@
 .available {
     display: flex;
     margin: 10px;
-    border: 1px solid gray;
+    justify-content: space-around;
+    /* border: 1px solid gray; */
+}
+
+ul li {
+    list-style-type: none;
 }
