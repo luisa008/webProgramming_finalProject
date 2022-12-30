@@ -32,17 +32,22 @@ export default {
                 case "homepage": {
                     const username = payload;
                     
-                    const user = await UserModel.findOne({username});
+                    let user = await UserModel.findOne({username});
                     if (!user) {
-                        user = await new UserModel({username});
+                        user = await new UserModel({
+                            username: username,
+                            events: [],
+                            eventSubmitted: new Map([]),
+                        });
                         await user.save;
                     }
 
                     ws.user = user;
-                    if (showingEvents[ws.state] && showingEvents[ws.state].has(ws)) {
-                        showingEvents[ws.state].delete(ws);
+                    if (ws.state === "show" && showingEvents[ws.eventId] && showingEvents[ws.eventId].has(ws)) {
+                        showingEvents[ws.eventId].delete(ws);
                     }
                     ws.state = "homepage";
+                    ws.eventId = "";
                     
                     await user.populate({ path: "events", select: [
                         "id",
@@ -67,7 +72,21 @@ export default {
                         pplNum: 1,
                         pplNames: [user.username],
                         pplSubmitted: {[user.username]: false},
-                        timeSlots: form,
+                        timeSlots: [],
+                    })
+                    form.forEach((time) => {
+                        var tempTime = [];
+                        time.forEach((timeOfDay) => {
+                            tempTime.push({
+                                date: timeOfDay.date,
+                                time: timeOfDay.time,
+                                availableNum: 0,
+                                availablePpl: [],
+                                notAvailablePpl: [user.username],
+                                isAvailable: {[user.username]: false},
+                            })
+                        })
+                        event.timeSlots.push(tempTime);
                     })
                     await event.save();
 
@@ -82,6 +101,7 @@ export default {
                         "pplNum",
                     ]});
                     sendData(["homepage", user], ws);
+                    console.log(JSON.stringify(event));
                     break;
                 }
 
@@ -104,6 +124,13 @@ export default {
                     event.pplNum += 1;
                     event.pplNames.push(user.username);
                     event.pplSubmitted.set(user.username, false);
+                    event.timeSlots.forEach((time) => {
+                        time.forEach((timeOfDay) => {
+                            timeOfDay.notAvailablePpl.push(user.username);
+                            timeOfDay.isAvailable[user.username] = false;
+                        })
+                    });
+                    event.markModified("timeSlots");
                     await event.save();
 
                     user.events.push(event._id);
@@ -137,46 +164,80 @@ export default {
                         if (!showingEvents[id]) showingEvents[id] = new Set();
                         showingEvents[id].add(ws);
 
-                        ws.state = id;
+                        ws.state = "show";
+                        ws.eventId = id;
                     }
                     else {
-                        sendData(["editEvent", event], ws);
+                        const timeSlots = [];
+                        event.timeSlots.forEach((time) => {
+                            var tempTime = [];
+                            time.forEach((timeOfDay) => {
+                                tempTime.push({
+                                    date: timeOfDay.date, 
+                                    time: timeOfDay.time,
+                                    available: timeOfDay.isAvailable[user.username],
+                                })
+                            })
+                            timeSlots.push(tempTime);
+                        })
+
+                        sendData(["editEvent", {timeSlots}], ws);
                         ws.state = "edit";
+                        ws.eventId = id;
                     }
                     break;
                 }
 
                 // receive event form data & return event data for showEvent
                 case "submitEvent": {
-                    const { id, form } = payload;
                     const user = ws.user;
 
-                    const event = await EventModel.findOne({id});
+                    const event = await EventModel.findOne({id: ws.eventId});
                     if (!event) {
                         console.log("not found!")
                         sendData(["error", "Event not found!"], ws);
                     }
                     event.pplSubmitted.set(user.username, true);
-                    event.timeSlots = form;
+                    for (var i = 0; i < payload.length; i++) {
+                        for (var j = 0; j < payload[i].length; j++) {
+                            if (payload[i][j].available && !event.timeSlots[i][j].isAvailable[user.username]) {
+                                event.timeSlots[i][j].availableNum += 1;
+                                event.timeSlots[i][j].availablePpl.push(user.username);
+                                event.timeSlots[i][j].notAvailablePpl = event.timeSlots[i][j].notAvailablePpl.filter(username => username !== user.username);
+                                event.timeSlots[i][j].isAvailable[user.username] = true;
+                            }if (!payload[i][j].available && event.timeSlots[i][j].isAvailable[user.username]) {
+                                event.timeSlots[i][j].availableNum -= 1;
+                                event.timeSlots[i][j].availablePpl = event.timeSlots[i][j].availablePpl.filter(username => username !== user.username);
+                                event.timeSlots[i][j].NotAvailablePpl.push(user.username);
+                                event.timeSlots[i][j].isAvailable[user.username] = false;
+                            }
+                            console.log(event.timeSlots[i][j].availableNum);
+                            console.log(event.timeSlots[i][j].availablePpl);
+                            console.log(event.timeSlots[i][j].notAvailablePpl);
+                            console.log(JSON.stringify(event.timeSlots[i][j].isAvailable));
+                        }
+                    }
                     event.markModified("timeSlots");
                     await event.save();
 
-                    user.eventSubmitted.set(id, true);
+                    user.eventSubmitted.set(ws.eventId, true);
                     await user.save();
 
-                    if (!showingEvents[id]) showingEvents[id] = new Set();
-                    showingEvents[id].add(ws);
+                    if (!showingEvents[ws.eventId]) showingEvents[ws.eventId] = new Set();
+                    showingEvents[ws.eventId].add(ws);
                     
-                    ws.state = id;
+                    ws.state = "show";
                     
                     sendData(["showEvent", event], ws);
-                    if (showingEvents[id]) {
-                        showingEvents[id].forEach(client => {
+                    if (showingEvents[ws.eventId]) {
+                        showingEvents[ws.eventId].forEach((client) => {
                             if (client !== ws) {
                                 sendData(["updateEvent", event], client);
                             }
                         });
                     }
+                    console.log(event);
+                    console.log(user);
                     break;
                 }
 

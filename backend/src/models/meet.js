@@ -8,7 +8,7 @@ const EventSchema = new Schema({
     creator: {type: String, required: [true, 'creator field is required.']},
     pplNum: {type:  Number, required: [true, 'participantNum field is required']},
     pplNames: [{type: String}],
-    pplSubmitted: {type: Map, of: String},
+    pplSubmitted: {type: Map, of: Boolean},
     timeSlots: {},
 });
 const EventModel = mongoose.model('Event', EventSchema);
@@ -17,7 +17,7 @@ const EventModel = mongoose.model('Event', EventSchema);
 const UserSchema = new Schema({
     username: {type: String, required: [true, 'name field is required.']},
     events: [{type: mongoose.Types.ObjectId, ref: 'Event'}],
-    eventSubmitted: {type: Map, of: String},
+    eventSubmitted: {type: Map, of: Boolean},
 });
 const UserModel = mongoose.model('User', UserSchema);
 

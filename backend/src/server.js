@@ -19,6 +19,7 @@ db.once('open', () => {
     wss.on('connection', (ws) => {
         ws.user = {};
         ws.state = "init";
+        ws.eventId = "";
         ws.onmessage = wsConnect.onMessage(ws, wss); 
     });
 });
