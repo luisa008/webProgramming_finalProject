@@ -82,7 +82,7 @@ const addHexColor = (c1, c2) => {
 }
 
 const ShowEvent = () => {
-    const {showList, setShowList, editEvent, showId} = useMeet();
+    const {showList, setShowList, editEvent, showId, changeEvent} = useMeet();
     const [avaList, setAvaList] = useState([]);
     const [notAvaList, setNotAvaList] = useState([]);
     const navigate = useNavigate();
@@ -107,13 +107,13 @@ const ShowEvent = () => {
 
     const handleUpdate = () => {
         navigate('/CreateEvent');
-        editEvent(showId);
+        changeEvent(showId);
     };
 
     return (
         <div className="mainContainer">
             <header className='Title'>
-                <TitleWrapper><h1>Let's Meeting</h1></TitleWrapper>
+                <TitleWrapper><h1>Let's Meet</h1></TitleWrapper>
             </header>
             <div className="FormContent">
                 <ContentBoxesWrapper>

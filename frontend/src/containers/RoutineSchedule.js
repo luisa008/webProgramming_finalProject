@@ -34,7 +34,7 @@ const FormWrapper = styled.div`
     padding: 50px;
 `;
 
-const CreateEvent = () => {
+const RoutineSchedule = () => {
     const {submitEvent, eventRange, setEventRange} = useMeet();
     // const [block, setBlock] = useState(tempArray);
     const navigate = useNavigate();
@@ -58,9 +58,9 @@ const CreateEvent = () => {
             </header>
             <div className="FormContent">
                 <ContentBoxesWrapper>
-                    <TitleWrapper><h1 style={{marginRight: '20px'}}>Event Name</h1>
+                    <TitleWrapper><h1 style={{marginRight: '20px'}}>Routine Schedule</h1>
                     <Button type="primary" onClick={handleSubmit}>
-                        Submit Event
+                        Submit Schedule
                     </Button></TitleWrapper>
                     <FormWrapper>
                         <div className='cellIntroBlock'>
@@ -93,4 +93,4 @@ const CreateEvent = () => {
 
 // onMouseMove={() => handleCell(i, j)}
 
-export default CreateEvent;
+export default RoutineSchedule;

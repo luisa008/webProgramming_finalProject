@@ -67,7 +67,7 @@ const MeetProvider = (props) => {
                 for(var event of payload.events){
                     temp.push({
                         title: event.name,
-                        description: `Creator: ${event.creator} | Participants: ${event.pplNum}`,
+                        description: `Creator: ${event.creator} | Participants: ${event.pplNum} | Event ID: ${event.id}`,
                         id: event.id,
                         submitted: payload.eventSubmitted[event.id]
                     })
@@ -97,6 +97,9 @@ const MeetProvider = (props) => {
             // receive event data when someone else updates
             case "updateEvent": {
                 // payload: event schema
+                console.log(payload);
+                setShowList(payload.timeSlots);
+                setShowId(payload.id);
                 break;
             }
             

@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import SignIn from './containers/SignIn';
 import CreateEvent from './containers/CreateEvent';
 import ShowEvent from './containers/ShowEvent';
+import RoutineSchedule from './containers/RoutineSchedule';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route element={<Homepage />} path='/Homepage'></Route>
             <Route element={<CreateEvent />} path='/CreateEvent'></Route>
             <Route element={<ShowEvent />} path='/ShowEvent'></Route>
+            <Route element={<RoutineSchedule />} path='/RoutineSchedule'></Route>
       </Routes>
     </Router>
   );

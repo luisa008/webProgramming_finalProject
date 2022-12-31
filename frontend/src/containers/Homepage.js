@@ -3,6 +3,7 @@ import { Button, Space } from 'antd';
 import styled from 'styled-components';
 import './Homepage.css';
 import { MeetProvider, useMeet } from './hooks/useMeet';
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect, createContext, useContext } from "react";
 import EventContent from '../components/EventContent';
 import EventModal from '../components/EventModal';
@@ -51,16 +52,21 @@ const Homepage = () => {
     const {user, eventList, setEventList, joinEvent, createEvent} = useMeet();
     const [eventModalOpen, setEventModalOpen] = useState(false);
     const [joinModalOpen, setJoinModalOpen] = useState(false);
+    const navigate = useNavigate();
     // console.log(user)
 
     // useEffect(() => {
     //     setUser("lisa");
     // }, []);
 
+    const handleSchedule = () => {
+        navigate('/RoutineSchedule');
+    }
+
     return (
         <div className="mainContainer">
             <header className='Title'>
-                <TitleWrapper><h1>Let's Meeting</h1></TitleWrapper>
+                <TitleWrapper><h1>Let's Meet</h1></TitleWrapper>
             </header>
             <div className="Slide">
                 <SlideBoxesWrapper>
@@ -70,7 +76,7 @@ const Homepage = () => {
                         <Button type="primary" onClick={()=>{setEventModalOpen(true)}}>
                             Create Event
                         </Button>
-                        <Button type="primary">
+                        <Button type="primary" onClick={handleSchedule}>
                             Create Routine Schedule
                         </Button>
                         <Button type="primary" onClick={()=>{setJoinModalOpen(true)}}>
