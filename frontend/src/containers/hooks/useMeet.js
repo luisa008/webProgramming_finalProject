@@ -10,18 +10,18 @@ const MeetContext = createContext({
     user: "",
     eventRange: [],
     eventName: [],
-    eventBar: [],
     eventList: [],
     showList: [],
+    showId: [],
 });
 
 const MeetProvider = (props) => {
     const [user, setUser] = useState("");
     const [eventRange, setEventRange] = useState([]);
     const [eventName, setEventName] = useState("");
-    const [eventBar, setEventBar] = useState([]);
     const [eventList, setEventList] = useState([]);
     const [showList, setShowList] = useState([]);
+    const [showId, setShowId] = useState("");
 
     /* Call the methods below to notify server */
     // request user data for homepage
@@ -43,6 +43,10 @@ const MeetProvider = (props) => {
     // submit event
     const submitEvent = (event) => {
         sendData(["submitEvent", event]);
+    }
+    // change event
+    const changeEvent = (eventId) => {
+        sendData(["reviseEvent", eventId]);
     }
 
     const sendData = async (data) => {
@@ -86,6 +90,7 @@ const MeetProvider = (props) => {
                 // payload: event schema
                 console.log(payload);
                 setShowList(payload.timeSlots);
+                setShowId(payload.id);
                 break;
             }
 
@@ -102,8 +107,8 @@ const MeetProvider = (props) => {
     return (
         <MeetContext.Provider
             value={{
-                user, setUser, eventRange, setEventRange, eventName, setEventName, eventBar, setEventBar, eventList, setEventList,
-                homepage, createEvent, joinEvent, editEvent, submitEvent, showList, setShowList
+                user, setUser, eventRange, setEventRange, eventName, setEventName, eventList, setEventList, changeEvent,
+                homepage, createEvent, joinEvent, editEvent, submitEvent, showList, setShowList, showId, setShowId
             }}
             {...props}
         />

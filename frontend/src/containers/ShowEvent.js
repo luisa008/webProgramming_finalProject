@@ -4,37 +4,7 @@ import styled from 'styled-components';
 import './CreateEvent.css';
 import { MeetProvider, useMeet } from './hooks/useMeet';
 import { useState, useEffect, createContext, useContext } from "react";
-
-let tempArray = [
-    [{date: "12/7", time: "9:00", available: 0},{date: "12/8", time: "9:00", available: 0},{date: "12/9", time: "9:00", available: 0}],
-    [{date: "12/7", time: "9:30", available: 0},{date: "12/8", time: "9:30", available: 0},{date: "12/9", time: "9:30", available: 0}],
-    [{date: "12/7", time: "10:00", available: 0},{date: "12/8", time: "10:00", available: 0},{date: "12/9", time: "10:00", available: 0}],
-    [{date: "12/7", time: "10:30", available: 1},{date: "12/8", time: "10:30", available: 0},{date: "12/9", time: "10:30", available: 0}],
-    [{date: "12/7", time: "11:00", available: 1},{date: "12/8", time: "11:00", available: 0},{date: "12/9", time: "11:00", available: 0}],
-    [{date: "12/7", time: "11:30", available: 1},{date: "12/8", time: "11:30", available: 0},{date: "12/9", time: "11:30", available: 0}],
-    [{date: "12/7", time: "12:00", available: 1},{date: "12/8", time: "12:00", available: 2},{date: "12/9", time: "12:00", available: 0}],
-    [{date: "12/7", time: "12:30", available: 0},{date: "12/8", time: "12:30", available: 2},{date: "12/9", time: "12:30", available: 0}],
-    [{date: "12/7", time: "13:00", available: 0},{date: "12/8", time: "13:00", available: 2},{date: "12/9", time: "13:00", available: 0}],
-    [{date: "12/7", time: "13:30", available: 0},{date: "12/8", time: "13:30", available: 2},{date: "12/9", time: "13:30", available: 0}],
-    [{date: "12/7", time: "14:00", available: 0},{date: "12/8", time: "14:00", available: 3},{date: "12/9", time: "14:00", available: 0}],
-    [{date: "12/7", time: "14:30", available: 0},{date: "12/8", time: "14:30", available: 3},{date: "12/9", time: "14:30", available: 0}],
-    [{date: "12/7", time: "15:00", available: 0},{date: "12/8", time: "15:00", available: 3},{date: "12/9", time: "15:00", available: 0}],
-    [{date: "12/7", time: "15:30", available: 0},{date: "12/8", time: "15:30", available: 1},{date: "12/9", time: "15:30", available: 0}],
-    [{date: "12/7", time: "16:00", available: 0},{date: "12/8", time: "16:00", available: 1},{date: "12/9", time: "16:00", available: 0}],
-    [{date: "12/7", time: "16:30", available: 0},{date: "12/8", time: "16:30", available: 0},{date: "12/9", time: "16:30", available: 0}],
-    [{date: "12/7", time: "17:00", available: 0},{date: "12/8", time: "17:00", available: 0},{date: "12/9", time: "17:00", available: 0}],
-    [{date: "12/7", time: "17:30", available: 0},{date: "12/8", time: "17:30", available: 0},{date: "12/9", time: "17:30", available: 0}],
-    [{date: "12/7", time: "18:00", available: 0},{date: "12/8", time: "18:00", available: 0},{date: "12/9", time: "18:00", available: 0}],
-    [{date: "12/7", time: "18:30", available: 0},{date: "12/8", time: "18:30", available: 0},{date: "12/9", time: "18:30", available: 0}],
-    [{date: "12/7", time: "19:00", available: 0},{date: "12/8", time: "19:00", available: 0},{date: "12/9", time: "19:00", available: 0}],
-    [{date: "12/7", time: "19:30", available: 0},{date: "12/8", time: "19:30", available: 0},{date: "12/9", time: "19:30", available: 0}],
-    [{date: "12/7", time: "20:00", available: 0},{date: "12/8", time: "20:00", available: 1},{date: "12/9", time: "20:00", available: 0}],
-    [{date: "12/7", time: "20:30", available: 1},{date: "12/8", time: "20:30", available: 1},{date: "12/9", time: "20:30", available: 0}],
-    [{date: "12/7", time: "21:00", available: 1},{date: "12/8", time: "21:00", available: 0},{date: "12/9", time: "21:00", available: 0}],
-    [{date: "12/7", time: "21:30", available: 0},{date: "12/8", time: "21:30", available: 2},{date: "12/9", time: "21:30", available: 0}],
-    [{date: "12/7", time: "22:00", available: 0},{date: "12/8", time: "22:00", available: 0},{date: "12/9", time: "22:00", available: 0}],
-    [{date: "12/7", time: "22:30", available: 0},{date: "12/8", time: "22:30", available: 0},{date: "12/9", time: "22:30", available: 0}],
-]
+import { useNavigate } from "react-router-dom";
 
 const ContentBoxesWrapper = styled.div`
     width: 100%;
@@ -112,9 +82,10 @@ const addHexColor = (c1, c2) => {
 }
 
 const ShowEvent = () => {
-    const {showList, setShowList} = useMeet();
+    const {showList, setShowList, editEvent, showId} = useMeet();
     const [avaList, setAvaList] = useState([]);
     const [notAvaList, setNotAvaList] = useState([]);
+    const navigate = useNavigate();
 
     const chooseColor = (num) => {
         var max = 0;
@@ -134,6 +105,11 @@ const ShowEvent = () => {
         setNotAvaList(showList[i][j].notAvailablePpl);
     }
 
+    const handleUpdate = () => {
+        navigate('/CreateEvent');
+        editEvent(showId);
+    };
+
     return (
         <div className="mainContainer">
             <header className='Title'>
@@ -144,11 +120,22 @@ const ShowEvent = () => {
                     <ScheduleWrapper>
                         <SubTitleWrapper>
                             <h1 style={{marginRight: '20px'}}>Event Name</h1>
-                            <Button type='primary'>Update Event</Button>
+                            <Button type='primary' onClick={handleUpdate}>Revise Event</Button>
                         </SubTitleWrapper>
                         <FormWrapper>
+                            <div className='cellIntroBlock'>
+                                {showList.length !== 0 ? showList[0].map((item, j) => (
+                                    <div className='cellIntro' key={j}>{item.date.slice(5,10)}</div>
+                                )) : <></>}
+                            </div>
+                            <div className='cellIntroBlock'>
+                                {showList.length !== 0 ? showList[0].map((item, j) => (
+                                    <div className='cellIntro' key={j}>{item.date.slice(10,13)}</div>
+                                )) : <></>}
+                            </div>
                             {showList.map((items, i) => (
                                 <div key={"row"+i} id={"row"+i} style={{display:'flex'}}>
+                                    <div className='cellIntro'>{items[0].time}</div>
                                     {items.map((item, j) => (
                                         <div className='cell' key={j} id={j} date={item.date} time={item.time}
                                         available={item.availableNum} onMouseOver={() => handleShow(i, j)}

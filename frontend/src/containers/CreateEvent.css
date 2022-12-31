@@ -60,6 +60,20 @@
     border: 1px solid gray;
 }
 
+.cellIntro {
+    width: 60px;
+    height: 20px;
+    justify-content: "center";
+    align-items: "center";
+    display: "flex";
+    /* border: 1px solid gray; */
+}
+
+.cellIntroBlock {
+    display: flex;
+    margin-left: 60px;
+}
+
 .cell:active {
     background-color: blue;
 }
