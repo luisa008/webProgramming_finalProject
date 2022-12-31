@@ -48,6 +48,10 @@ const MeetProvider = (props) => {
     const changeEvent = (eventId) => {
         sendData(["reviseEvent", eventId]);
     }
+    // routine schedule
+    const routineSchedule = () => {
+        sendData(["routineSchedule", ""]);
+    }
 
     const sendData = async (data) => {
         await client.send(JSON.stringify(data));
@@ -111,7 +115,7 @@ const MeetProvider = (props) => {
         <MeetContext.Provider
             value={{
                 user, setUser, eventRange, setEventRange, eventName, setEventName, eventList, setEventList, changeEvent,
-                homepage, createEvent, joinEvent, editEvent, submitEvent, showList, setShowList, showId, setShowId
+                homepage, createEvent, joinEvent, editEvent, submitEvent, routineSchedule, showList, setShowList, showId, setShowId
             }}
             {...props}
         />

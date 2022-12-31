@@ -7,7 +7,7 @@ const sendData = (data, ws) => {
 };
 
 const makeEventId = async () => {
-    const chars = 'abcdefghijklmnopqrstuvwxyz';
+    const chars = "abcdefghijklmnopqrstuvwxyz";
     var exists = true;
     var id;
     while (exists) {
@@ -19,6 +19,11 @@ const makeEventId = async () => {
     }
     return id;
 }
+
+const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const times = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+                "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
+                "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30"]
 
 export default {
     onMessage: (ws, wss) => (
@@ -32,14 +37,26 @@ export default {
                 case "homepage": {
                     const username = payload;
                     
-                    let user = await UserModel.findOne({username});
+                    var user = await UserModel.findOne({username});
                     if (!user) {
                         user = await new UserModel({
                             username: username,
+                            routineSchedule: [],
                             events: [],
                             eventSubmitted: new Map([]),
                         });
-                        await user.save;
+                        times.forEach((time) => {
+                            var temp = [];
+                            weekDays.forEach((day) => {
+                                temp.push({
+                                    day: day,
+                                    time: time,
+                                    routine: false,
+                                })
+                            })
+                            user.routineSchedule.push(temp);
+                        })
+                        await user.save();
                     }
 
                     ws.user = user;
@@ -56,6 +73,27 @@ export default {
                         "pplNum",
                     ]});
                     sendData(["homepage", user], ws);
+                    console.log(user);
+                    break;
+                }
+
+                // receive routine schedule & add to user schema
+                case "routineSchedule": {
+                    const timeSlots = [];
+                    for (var i = 0; i < times.length; i++) {
+                        var tempTime = [];
+                        for (var j = 0; j < weekDays.length; j++) {
+                            tempTime.push({
+                                day: weekDays[j],
+                                time: times[i],
+                                routine: false,
+                            })
+                        }
+                        timeSlots.push(tempTime);
+                    }
+                    sendData(["routineSchedule", timeSlots], ws);
+                    ws.state = "routine";
+                    console.log(timeSlots);
                     break;
                 }
 
@@ -169,25 +207,32 @@ export default {
                     }
                     else {
                         const timeSlots = [];
-                        event.timeSlots.forEach((time) => {
+                        var weekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
+                        console.log(`starting weekday: ${event.timeSlots[0][0].date.slice(-3)}`);
+                        console.log(`index: ${weekDay}`);
+                        for (var i = 0; i < event.timeSlots.length; i++) {
                             var tempTime = [];
-                            time.forEach((timeOfDay) => {
+                            for (var j = 0; j < event.timeSlots[i].length; j++) {
                                 tempTime.push({
-                                    date: timeOfDay.date, 
-                                    time: timeOfDay.time,
-                                    available: timeOfDay.isAvailable[user.username],
+                                    date: event.timeSlots[i][j].date,
+                                    time: event.timeSlots[i][j].time,
+                                    available: event.timeSlots[i][j].isAvailable[user.username],
+                                    routine: user.routineSchedule[i][weekDay].routine,
                                 })
-                            })
+                                weekDay = (weekDay + 1) % 7;
+                            }
                             timeSlots.push(tempTime);
-                        })
+                        }
 
                         sendData(["editEvent", {timeSlots}], ws);
                         ws.state = "edit";
                         ws.eventId = id;
+                        console.log(JSON.stringify(timeSlots));
                     }
                     break;
                 }
 
+                // receive eventId & return event data for editing
                 case "reviseEvent": {
                     const id = payload;
                     const user = ws.user;
@@ -200,28 +245,42 @@ export default {
                     }
 
                     const timeSlots = [];
-                    event.timeSlots.forEach((time) => {
+                    var weekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
+                    console.log(`starting weekday: ${event.timeSlots[0][0].date.slice(-3)}`);
+                    console.log(`index: ${weekDay}`);
+                    for (var i = 0; i < event.timeSlots.length; i++) {
                         var tempTime = [];
-                        time.forEach((timeOfDay) => {
+                        for (var j = 0; j < event.timeSlots[i].length; j++) {
                             tempTime.push({
-                                date: timeOfDay.date, 
-                                time: timeOfDay.time,
-                                available: timeOfDay.isAvailable[user.username],
+                                date: event.timeSlots[i][j].date,
+                                time: event.timeSlots[i][j].time,
+                                available: event.timeSlots[i][j].isAvailable[user.username],
+                                routine: user.routineSchedule[i][weekDay].routine,
                             })
-                        })
+                            weekDay = (weekDay + 1) % 7;
+                        }
                         timeSlots.push(tempTime);
-                    })
+                    }
 
                     sendData(["editEvent", {timeSlots}], ws);
                     ws.state = "edit";
                     ws.eventId = id;
-
+                    console.log(JSON.stringify(timeSlots));
                     break;
                 }
 
                 // receive event form data & return event data for showEvent
                 case "submitEvent": {
                     const user = ws.user;
+
+                    // for routine schedule submission
+                    if (ws.state === "routine") {
+                        user.routineSchedule = payload;
+                        user.markModified("routineSchedule");
+                        await user.save();
+                        console.log(user);
+                        break;
+                    }
 
                     const event = await EventModel.findOne({id: ws.eventId});
                     if (!event) {
