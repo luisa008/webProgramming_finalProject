@@ -12,7 +12,8 @@ const MeetContext = createContext({
     eventName: [],
     eventList: [],
     showList: [],
-    showId: [],
+    showId: "",
+    roSchedule: [],
 });
 
 const MeetProvider = (props) => {
@@ -22,6 +23,7 @@ const MeetProvider = (props) => {
     const [eventList, setEventList] = useState([]);
     const [showList, setShowList] = useState([]);
     const [showId, setShowId] = useState("");
+    const [roSchedule, setRoSchedule] = useState([]);
 
     /* Call the methods below to notify server */
     // request user data for homepage
@@ -111,7 +113,8 @@ const MeetProvider = (props) => {
         <MeetContext.Provider
             value={{
                 user, setUser, eventRange, setEventRange, eventName, setEventName, eventList, setEventList, changeEvent,
-                homepage, createEvent, joinEvent, editEvent, submitEvent, showList, setShowList, showId, setShowId
+                homepage, createEvent, joinEvent, editEvent, submitEvent, showList, setShowList, showId, setShowId,
+                roSchedule, setRoSchedule
             }}
             {...props}
         />

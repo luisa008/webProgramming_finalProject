@@ -85,15 +85,16 @@ const ShowEvent = () => {
     const {showList, setShowList, editEvent, showId, changeEvent} = useMeet();
     const [avaList, setAvaList] = useState([]);
     const [notAvaList, setNotAvaList] = useState([]);
+    const [bestTime, setBestTime] = useState([]);
     const navigate = useNavigate();
 
     const chooseColor = (num) => {
         var max = 0;
-        for(var i = 0; i < showList.length; i++){
-            for(var j = 0; j < showList[i].length; j++){
-                if(showList[i][j].available > max) max = showList[i][j].available;
-            }
-        }
+        // for(var i = 0; i < showList.length; i++){
+        //     for(var j = 0; j < showList[i].length; j++){
+        //         if(showList[i][j].available > max) max = showList[i][j].available;
+        //     }
+        // }
         // console.log(max);
         // console.log(addHexColor("008000", (num*4096).toString(16)));
         return addHexColor("ffffff", (num*8192).toString(16));
@@ -109,6 +110,25 @@ const ShowEvent = () => {
         navigate('/CreateEvent');
         changeEvent(showId);
     };
+
+    useEffect(() => {
+        var temp = [];
+        var max = 0;
+        for(var i = 0; i < showList.length; i++){
+            for(var j = 0; j < showList[i].length; j++){
+                if(showList[i][j].availableNum > max) max = showList[i][j].availableNum;
+            }
+        };
+        for(var k = 0; k < showList.length; k++){
+            for(var p = 0; p < showList[k].length; p++){
+                if(showList[k][p].availableNum === max){
+                    temp.push(showList[k][p].date.slice(0,10)+" "+showList[k][p].time);
+                }
+            }
+        };
+        setBestTime([...temp]);
+        console.log(temp);
+    }, [showList]);
 
     return (
         <div className="mainContainer">
@@ -168,6 +188,11 @@ const ShowEvent = () => {
                     </PeopleWrapper>
                     <ResultWrapper>
                         <SubTitleWrapper><h1>Best Time</h1></SubTitleWrapper>
+                            <ul>
+                                {bestTime.map((item, i) => (
+                                    <li key={i}>{item}</li>
+                                ))}
+                            </ul>
                     </ResultWrapper>
                 </ContentBoxesWrapper>
             </div>

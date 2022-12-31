@@ -35,7 +35,7 @@ const FormWrapper = styled.div`
 `;
 
 const RoutineSchedule = () => {
-    const {submitEvent, eventRange, setEventRange} = useMeet();
+    const {submitEvent, eventRange, setEventRange, roSchedule, setRoSchedule} = useMeet();
     // const [block, setBlock] = useState(tempArray);
     const navigate = useNavigate();
 
@@ -73,7 +73,7 @@ const RoutineSchedule = () => {
                                 <div className='cellIntro' key={j}>{item.date.slice(10,13)}</div>
                             )) : <></>}
                         </div>
-                        {eventRange.map((items, i) => (
+                        {roSchedule.map((items, i) => (
                             <div key={"row"+i} id={"row"+i} style={{display:'flex'}}>
                                 <div className='cellIntro'>{items[0].time}</div>
                                 {items.map((item, j) => (
