@@ -188,6 +188,37 @@ export default {
                     break;
                 }
 
+                case "reviseEvent": {
+                    const id = payload;
+                    const user = ws.user;
+
+                    const event = await EventModel.findOne({id});
+                    if (!event) {
+                        console.log("not found!");
+                        sendData(["error", "Event not found!"], ws);
+                        break;
+                    }
+
+                    const timeSlots = [];
+                    event.timeSlots.forEach((time) => {
+                        var tempTime = [];
+                        time.forEach((timeOfDay) => {
+                            tempTime.push({
+                                date: timeOfDay.date, 
+                                time: timeOfDay.time,
+                                available: timeOfDay.isAvailable[user.username],
+                            })
+                        })
+                        timeSlots.push(tempTime);
+                    })
+
+                    sendData(["editEvent", {timeSlots}], ws);
+                    ws.state = "edit";
+                    ws.eventId = id;
+
+                    break;
+                }
+
                 // receive event form data & return event data for showEvent
                 case "submitEvent": {
                     const user = ws.user;
@@ -208,7 +239,7 @@ export default {
                             }if (!payload[i][j].available && event.timeSlots[i][j].isAvailable[user.username]) {
                                 event.timeSlots[i][j].availableNum -= 1;
                                 event.timeSlots[i][j].availablePpl = event.timeSlots[i][j].availablePpl.filter(username => username !== user.username);
-                                event.timeSlots[i][j].NotAvailablePpl.push(user.username);
+                                event.timeSlots[i][j].notAvailablePpl.push(user.username);
                                 event.timeSlots[i][j].isAvailable[user.username] = false;
                             }
                             console.log(event.timeSlots[i][j].availableNum);
