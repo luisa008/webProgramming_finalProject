@@ -45,12 +45,12 @@ const FormWrapper = styled.div`
     justify-content: center;
     margin: auto;
     padding: 50px;
+    overflow: auto;
 `;
 
 const ScheduleWrapper = styled.div`
     background: #eeeeee52;
     margin: 20px;
-    overflow: auto;
     border: 1px solid gray;
     border-radius: 10px;
     grid-column: 1/2;
@@ -132,6 +132,7 @@ const ShowEvent = () => {
                 }
             }
         };
+        temp.sort((a, b) => {return new Date(a.slice(0,11)) - new Date(b.slice(0,11))});
         setBestTime([...temp]);
         // console.log(temp);
     }, [showList]);

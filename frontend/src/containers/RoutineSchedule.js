@@ -74,7 +74,7 @@ const RoutineSchedule = () => {
                                 {items.map((item, j) => (
                                     <div className='cell' key={j} id={j} date={item.date} time={item.time}
                                      available={item.available? true: undefined} onClick={() => handleCell(i, j)}
-                                     style={{ backgroundColor: item.routine ? "green" : "white" }}></div>
+                                     style={{ backgroundColor: item.routine ? "pink" : "white" }}></div>
                                 ))}
                             </div>
                         ))}
