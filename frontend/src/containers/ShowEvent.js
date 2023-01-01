@@ -55,6 +55,7 @@ const ScheduleWrapper = styled.div`
     border-radius: 10px;
     grid-column: 1/2;
     grid-row: 1/3;
+    overflow: auto;
 `;
 const PeopleWrapper = styled.div`
     background: #eeeeee52;
