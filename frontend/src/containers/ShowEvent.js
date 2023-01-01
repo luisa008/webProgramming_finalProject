@@ -32,6 +32,7 @@ const SubTitleWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 10px;
     h1 {
     margin: 0;
     font-size: 2em;
@@ -82,7 +83,7 @@ const addHexColor = (c1, c2) => {
 }
 
 const ShowEvent = () => {
-    const {showList, setShowList, editEvent, showId, changeEvent} = useMeet();
+    const {showList, eventName, showId, changeEvent, homepage} = useMeet();
     const [avaList, setAvaList] = useState([]);
     const [notAvaList, setNotAvaList] = useState([]);
     const [bestTime, setBestTime] = useState([]);
@@ -111,6 +112,11 @@ const ShowEvent = () => {
         changeEvent(showId);
     };
 
+    const handleHome = () => {
+        navigate('/HomePage');
+        // homepage();
+    }
+
     useEffect(() => {
         var temp = [];
         var max = 0;
@@ -127,7 +133,7 @@ const ShowEvent = () => {
             }
         };
         setBestTime([...temp]);
-        console.log(temp);
+        // console.log(temp);
     }, [showList]);
 
     return (
@@ -139,8 +145,11 @@ const ShowEvent = () => {
                 <ContentBoxesWrapper>
                     <ScheduleWrapper>
                         <SubTitleWrapper>
-                            <h1 style={{marginRight: '20px'}}>Event Name</h1>
-                            <Button type='primary' onClick={handleUpdate}>Revise Event</Button>
+                            <h1 style={{marginRight: '20px'}}>{eventName}</h1>
+                            <Space direction="horizonal">
+                                <Button type='primary' onClick={handleUpdate}>Revise Event</Button>
+                                <Button type='primary' onClick={handleHome}>Back to Homepage</Button>
+                            </Space>
                         </SubTitleWrapper>
                         <FormWrapper>
                             <div className='cellIntroBlock'>

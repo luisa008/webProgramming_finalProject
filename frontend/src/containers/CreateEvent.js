@@ -35,7 +35,7 @@ const FormWrapper = styled.div`
 `;
 
 const CreateEvent = () => {
-    const {submitEvent, eventRange, setEventRange} = useMeet();
+    const {submitEvent, eventRange, setEventRange, eventName} = useMeet();
     // const [block, setBlock] = useState(tempArray);
     const navigate = useNavigate();
 
@@ -75,7 +75,7 @@ const CreateEvent = () => {
             </header>
             <div className="FormContent">
                 <ContentBoxesWrapper>
-                    <TitleWrapper><h1 style={{marginRight: '20px'}}>Event Name</h1>
+                    <TitleWrapper><h1 style={{marginRight: '20px'}}>{eventName}</h1>
                     <Button type="primary" onClick={handleSubmit}>
                         Submit Event
                     </Button></TitleWrapper>

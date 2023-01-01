@@ -9,7 +9,7 @@ const client = new WebSocket(WS_URL);
 const MeetContext = createContext({
     user: "",
     eventRange: [],
-    eventName: [],
+    eventName: "",
     eventList: [],
     showList: [],
     showId: "",
@@ -85,8 +85,8 @@ const MeetProvider = (props) => {
             // receive event data to switch to editing
             case "editEvent": {
                 // payload: event schema
-                const { timeSlots } = payload;
                 console.log(payload)
+                const { timeSlots } = payload;
                 setEventRange(timeSlots);
                 break;
             }

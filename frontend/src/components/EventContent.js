@@ -24,12 +24,13 @@ const data = [
   ];
 
 const EventContent = () => {
-  const {eventList, editEvent} = useMeet();
+  const {eventList, editEvent, setEventName} = useMeet();
   // setEventList(data);
   const navigate = useNavigate();
 
-  const handleClick = (id, submitted) => {
+  const handleClick = (id, submitted, name) => {
     console.log(id)
+    setEventName(name);
     if(submitted){
       navigate('/ShowEvent');
       editEvent(id);
@@ -50,7 +51,7 @@ const EventContent = () => {
                 title={item.title}
                 description={item.description}
                 />
-                <Button onClick={() => {handleClick(item.id, item.submitted)}}>Go Event</Button>
+                <Button onClick={() => {handleClick(item.id, item.submitted, item.title)}}>Go Event</Button>
             </List.Item>
             )}
         />
