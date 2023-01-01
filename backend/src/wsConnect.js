@@ -1,6 +1,7 @@
 import { EventModel, UserModel } from "./models/meet";
 
-const showingEvents = {}
+const showingEvents = {};
+const homepageEvents = {};
 
 const sendData = (data, ws) => {
     ws.send(JSON.stringify(data)); 
@@ -30,7 +31,8 @@ export default {
         async (byteString) => {
             const { data } = byteString;
             const [task, payload] = JSON.parse(data);
-            console.log(`task: ${task}\npayload: ${JSON.stringify(payload)}`);
+            // console.log(`task: ${task}\npayload: ${JSON.stringify(payload)}`);
+            console.log(`task: ${task}`);
             
             switch (task) {
                 // receive username & return user data
@@ -59,6 +61,11 @@ export default {
                         await user.save();
                     }
 
+                    user.events.forEach((event) => {
+                        if (!homepageEvents[event.id]) homepageEvents[event.id] = new Set();
+                        homepageEvents[event.id].add(ws);
+                    })
+
                     ws.user = user;
                     if (ws.state === "show" && showingEvents[ws.eventId] && showingEvents[ws.eventId].has(ws)) {
                         showingEvents[ws.eventId].delete(ws);
@@ -73,27 +80,20 @@ export default {
                         "pplNum",
                     ]});
                     sendData(["homepage", user], ws);
-                    console.log(user);
                     break;
                 }
 
                 // receive routine schedule & add to user schema
                 case "routineSchedule": {
-                    const timeSlots = [];
-                    for (var i = 0; i < times.length; i++) {
-                        var tempTime = [];
-                        for (var j = 0; j < weekDays.length; j++) {
-                            tempTime.push({
-                                day: weekDays[j],
-                                time: times[i],
-                                routine: false,
-                            })
-                        }
-                        timeSlots.push(tempTime);
-                    }
-                    sendData(["routineSchedule", timeSlots], ws);
+                    const user = ws.user;
+                    sendData(["routineSchedule", user.routineSchedule], ws);
                     ws.state = "routine";
-                    console.log(timeSlots);
+                    // console.log(user.routineSchedule);
+                    user.routineSchedule.forEach((time) => {
+                        time.forEach((timeOfDay) => {
+                            console.log(JSON.stringify(timeOfDay));
+                        })
+                    })
                     break;
                 }
 
@@ -139,7 +139,10 @@ export default {
                         "pplNum",
                     ]});
                     sendData(["homepage", user], ws);
-                    console.log(JSON.stringify(event));
+
+                    homepageEvents[event.id] = new Set();
+                    homepageEvents[event.id].add(ws);
+
                     break;
                 }
 
@@ -182,6 +185,20 @@ export default {
                         "pplNum",
                     ]});
                     sendData(["homepage", user], ws);
+
+                    // broadcast updated participant number to other ppl
+                    homepageEvents[id].forEach(async (client) => {
+                        if (client !== ws && client.state === "homepage") {
+                            await client.user.populate({ path: "events", select: [
+                                "id",
+                                "name",
+                                "creator",
+                                "pplNum",
+                            ]});
+                            sendData(["homepage", client.user], client);
+                        }
+                    })
+                    homepageEvents[id].add(ws);
                     break;
                 }
 
@@ -207,19 +224,18 @@ export default {
                     }
                     else {
                         const timeSlots = [];
-                        var weekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
-                        console.log(`starting weekday: ${event.timeSlots[0][0].date.slice(-3)}`);
-                        console.log(`index: ${weekDay}`);
+                        var startingWeekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
                         for (var i = 0; i < event.timeSlots.length; i++) {
                             var tempTime = [];
+                            var day = startingWeekDay;
                             for (var j = 0; j < event.timeSlots[i].length; j++) {
                                 tempTime.push({
                                     date: event.timeSlots[i][j].date,
                                     time: event.timeSlots[i][j].time,
                                     available: event.timeSlots[i][j].isAvailable[user.username],
-                                    routine: user.routineSchedule[i][weekDay].routine,
+                                    routine: user.routineSchedule[i][day].routine,
                                 })
-                                weekDay = (weekDay + 1) % 7;
+                                day = (day + 1) % 7;
                             }
                             timeSlots.push(tempTime);
                         }
@@ -227,7 +243,6 @@ export default {
                         sendData(["editEvent", {timeSlots}], ws);
                         ws.state = "edit";
                         ws.eventId = id;
-                        console.log(JSON.stringify(timeSlots));
                     }
                     break;
                 }
@@ -245,19 +260,18 @@ export default {
                     }
 
                     const timeSlots = [];
-                    var weekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
-                    console.log(`starting weekday: ${event.timeSlots[0][0].date.slice(-3)}`);
-                    console.log(`index: ${weekDay}`);
+                    var startingWeekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
                     for (var i = 0; i < event.timeSlots.length; i++) {
                         var tempTime = [];
+                        var day = startingWeekDay;
                         for (var j = 0; j < event.timeSlots[i].length; j++) {
                             tempTime.push({
                                 date: event.timeSlots[i][j].date,
                                 time: event.timeSlots[i][j].time,
                                 available: event.timeSlots[i][j].isAvailable[user.username],
-                                routine: user.routineSchedule[i][weekDay].routine,
+                                routine: user.routineSchedule[i][day].routine,
                             })
-                            weekDay = (weekDay + 1) % 7;
+                            day = (day + 1) % 7;
                         }
                         timeSlots.push(tempTime);
                     }
@@ -265,7 +279,6 @@ export default {
                     sendData(["editEvent", {timeSlots}], ws);
                     ws.state = "edit";
                     ws.eventId = id;
-                    console.log(JSON.stringify(timeSlots));
                     break;
                 }
 
@@ -278,7 +291,6 @@ export default {
                         user.routineSchedule = payload;
                         user.markModified("routineSchedule");
                         await user.save();
-                        console.log(user);
                         break;
                     }
 
@@ -326,8 +338,6 @@ export default {
                             }
                         });
                     }
-                    console.log(event);
-                    console.log(user);
                     break;
                 }
 
