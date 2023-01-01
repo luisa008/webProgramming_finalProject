@@ -44,12 +44,29 @@ const CreateEvent = () => {
         temp[i][j].available = !temp[i][j].available;
         setEventRange(temp);
         console.log(eventRange[i][j].available)
-    }
+    };
 
     const handleSubmit = () => {
         navigate('/ShowEvent');
         submitEvent(eventRange);
-    }
+    };
+
+    const handleBlock = (item, i, j) => {
+        if(item.routine){
+            return (
+                <div className='cell' key={j} id={j} date={item.date} time={item.time}
+                available={item.available? true: undefined}
+                style={{ backgroundColor: "gray" }}></div>
+            )
+        }
+        else{
+            return(
+                <div className='cell' key={j} id={j} date={item.date} time={item.time}
+                    available={item.available? true: undefined} onClick={() => handleCell(i, j)}
+                    style={{ backgroundColor: item.available ? "pink" : "white" }}></div>
+            )
+        }
+    };
 
     return (
         <div className="mainContainer">
@@ -77,9 +94,10 @@ const CreateEvent = () => {
                             <div key={"row"+i} id={"row"+i} style={{display:'flex'}}>
                                 <div className='cellIntro'>{items[0].time}</div>
                                 {items.map((item, j) => (
-                                    <div className='cell' key={j} id={j} date={item.date} time={item.time}
-                                     available={item.available? true: undefined} onClick={() => handleCell(i, j)}
-                                     style={{ backgroundColor: item.available ? "green" : "white" }}></div>
+                                    handleBlock(item, i, j)
+                                    // <div className='cell' key={j} id={j} date={item.date} time={item.time}
+                                    //  available={item.available? true: undefined} onClick={() => handleCell(i, j)}
+                                    //  style={{ backgroundColor: item.available ? "pink" : "white" }}></div>
                                 ))}
                             </div>
                         ))}

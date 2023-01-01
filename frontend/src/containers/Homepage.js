@@ -49,7 +49,7 @@ const getDaysArray = function(start, end) {
 };
 
 const Homepage = () => {
-    const {user, eventList, setEventList, joinEvent, createEvent} = useMeet();
+    const {user, eventList, setEventList, joinEvent, createEvent, routineSchedule} = useMeet();
     const [eventModalOpen, setEventModalOpen] = useState(false);
     const [joinModalOpen, setJoinModalOpen] = useState(false);
     const navigate = useNavigate();
@@ -61,6 +61,7 @@ const Homepage = () => {
 
     const handleSchedule = () => {
         navigate('/RoutineSchedule');
+        routineSchedule();
     }
 
     return (

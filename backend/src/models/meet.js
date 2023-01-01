@@ -16,6 +16,7 @@ const EventModel = mongoose.model('Event', EventSchema);
 /******* User Schema *******/
 const UserSchema = new Schema({
     username: {type: String, required: [true, 'name field is required.']},
+    routineSchedule: {},
     events: [{type: mongoose.Types.ObjectId, ref: 'Event'}],
     eventSubmitted: {type: Map, of: Boolean},
 });

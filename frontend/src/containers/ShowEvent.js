@@ -188,11 +188,13 @@ const ShowEvent = () => {
                     </PeopleWrapper>
                     <ResultWrapper>
                         <SubTitleWrapper><h1>Best Time</h1></SubTitleWrapper>
-                            <ul>
+                            <SubTitleWrapper>
+                                <ul>
                                 {bestTime.map((item, i) => (
                                     <li key={i}>{item}</li>
                                 ))}
-                            </ul>
+                                </ul>
+                            </SubTitleWrapper>
                     </ResultWrapper>
                 </ContentBoxesWrapper>
             </div>

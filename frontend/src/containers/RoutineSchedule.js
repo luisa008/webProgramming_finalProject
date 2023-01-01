@@ -35,20 +35,20 @@ const FormWrapper = styled.div`
 `;
 
 const RoutineSchedule = () => {
-    const {submitEvent, eventRange, setEventRange, roSchedule, setRoSchedule} = useMeet();
+    const {submitEvent, roSchedule, setRoSchedule} = useMeet();
     // const [block, setBlock] = useState(tempArray);
     const navigate = useNavigate();
 
     const handleCell = (i, j) => {
-        let temp = [...eventRange];
-        temp[i][j].available = !temp[i][j].available;
-        setEventRange(temp);
-        console.log(eventRange[i][j].available)
+        let temp = [...roSchedule];
+        temp[i][j].routine = !temp[i][j].routine;
+        setRoSchedule(temp);
+        console.log(roSchedule[i][j].routine)
     }
 
     const handleSubmit = () => {
-        navigate('/ShowEvent');
-        submitEvent(eventRange);
+        navigate('/HomePage');
+        submitEvent(roSchedule);
     }
 
     return (
@@ -64,13 +64,8 @@ const RoutineSchedule = () => {
                     </Button></TitleWrapper>
                     <FormWrapper>
                         <div className='cellIntroBlock'>
-                            {eventRange.length !== 0 ? eventRange[0].map((item, j) => (
-                                <div className='cellIntro' key={j}>{item.date.slice(5,10)}</div>
-                            )) : <></>}
-                        </div>
-                        <div className='cellIntroBlock'>
-                            {eventRange.length !== 0 ? eventRange[0].map((item, j) => (
-                                <div className='cellIntro' key={j}>{item.date.slice(10,13)}</div>
+                            {roSchedule.length !== 0 ? roSchedule[0].map((item, j) => (
+                                <div className='cellIntro' key={j}>{item.day}</div>
                             )) : <></>}
                         </div>
                         {roSchedule.map((items, i) => (
@@ -79,7 +74,7 @@ const RoutineSchedule = () => {
                                 {items.map((item, j) => (
                                     <div className='cell' key={j} id={j} date={item.date} time={item.time}
                                      available={item.available? true: undefined} onClick={() => handleCell(i, j)}
-                                     style={{ backgroundColor: item.available ? "green" : "white" }}></div>
+                                     style={{ backgroundColor: item.routine ? "green" : "white" }}></div>
                                 ))}
                             </div>
                         ))}
