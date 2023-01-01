@@ -79,21 +79,15 @@ export default {
 
                 // receive routine schedule & add to user schema
                 case "routineSchedule": {
-                    const timeSlots = [];
-                    for (var i = 0; i < times.length; i++) {
-                        var tempTime = [];
-                        for (var j = 0; j < weekDays.length; j++) {
-                            tempTime.push({
-                                day: weekDays[j],
-                                time: times[i],
-                                routine: false,
-                            })
-                        }
-                        timeSlots.push(tempTime);
-                    }
-                    sendData(["routineSchedule", timeSlots], ws);
+                    const user = ws.user;
+                    sendData(["routineSchedule", user.routineSchedule], ws);
                     ws.state = "routine";
-                    console.log(timeSlots);
+                    // console.log(user.routineSchedule);
+                    user.routineSchedule.forEach((time) => {
+                        time.forEach((timeOfDay) => {
+                            console.log(JSON.stringify(timeOfDay));
+                        })
+                    })
                     break;
                 }
 
@@ -207,19 +201,20 @@ export default {
                     }
                     else {
                         const timeSlots = [];
-                        var weekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
+                        var startingWeekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
                         console.log(`starting weekday: ${event.timeSlots[0][0].date.slice(-3)}`);
-                        console.log(`index: ${weekDay}`);
+                        console.log(`index: ${startingWeekDay}`);
                         for (var i = 0; i < event.timeSlots.length; i++) {
                             var tempTime = [];
+                            var day = startingWeekDay;
                             for (var j = 0; j < event.timeSlots[i].length; j++) {
                                 tempTime.push({
                                     date: event.timeSlots[i][j].date,
                                     time: event.timeSlots[i][j].time,
                                     available: event.timeSlots[i][j].isAvailable[user.username],
-                                    routine: user.routineSchedule[i][weekDay].routine,
+                                    routine: user.routineSchedule[i][day].routine,
                                 })
-                                weekDay = (weekDay + 1) % 7;
+                                day = (day + 1) % 7;
                             }
                             timeSlots.push(tempTime);
                         }
@@ -245,19 +240,20 @@ export default {
                     }
 
                     const timeSlots = [];
-                    var weekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
+                    var startingWeekDay = weekDays.indexOf(event.timeSlots[0][0].date.slice(-3));
                     console.log(`starting weekday: ${event.timeSlots[0][0].date.slice(-3)}`);
-                    console.log(`index: ${weekDay}`);
+                    console.log(`index: ${startingWeekDay}`);
                     for (var i = 0; i < event.timeSlots.length; i++) {
                         var tempTime = [];
+                        var day = startingWeekDay;
                         for (var j = 0; j < event.timeSlots[i].length; j++) {
                             tempTime.push({
                                 date: event.timeSlots[i][j].date,
                                 time: event.timeSlots[i][j].time,
                                 available: event.timeSlots[i][j].isAvailable[user.username],
-                                routine: user.routineSchedule[i][weekDay].routine,
+                                routine: user.routineSchedule[i][day].routine,
                             })
-                            weekDay = (weekDay + 1) % 7;
+                            day = (day + 1) % 7;
                         }
                         timeSlots.push(tempTime);
                     }
