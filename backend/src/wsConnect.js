@@ -88,12 +88,6 @@ export default {
                     const user = ws.user;
                     sendData(["routineSchedule", user.routineSchedule], ws);
                     ws.state = "routine";
-                    // console.log(user.routineSchedule);
-                    user.routineSchedule.forEach((time) => {
-                        time.forEach((timeOfDay) => {
-                            console.log(JSON.stringify(timeOfDay));
-                        })
-                    })
                     break;
                 }
 
@@ -313,10 +307,6 @@ export default {
                                 event.timeSlots[i][j].notAvailablePpl.push(user.username);
                                 event.timeSlots[i][j].isAvailable[user.username] = false;
                             }
-                            console.log(event.timeSlots[i][j].availableNum);
-                            console.log(event.timeSlots[i][j].availablePpl);
-                            console.log(event.timeSlots[i][j].notAvailablePpl);
-                            console.log(JSON.stringify(event.timeSlots[i][j].isAvailable));
                         }
                     }
                     event.markModified("timeSlots");
