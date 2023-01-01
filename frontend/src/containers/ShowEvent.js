@@ -83,7 +83,7 @@ const addHexColor = (c1, c2) => {
 }
 
 const ShowEvent = () => {
-    const {showList, eventName, showId, changeEvent, homepage} = useMeet();
+    const {showList, eventName, showId, changeEvent, homepage, user} = useMeet();
     const [avaList, setAvaList] = useState([]);
     const [notAvaList, setNotAvaList] = useState([]);
     const [bestTime, setBestTime] = useState([]);
@@ -114,7 +114,7 @@ const ShowEvent = () => {
 
     const handleHome = () => {
         navigate('/HomePage');
-        // homepage();
+        homepage(user);
     }
 
     useEffect(() => {
